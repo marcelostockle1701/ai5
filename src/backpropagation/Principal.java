@@ -18,14 +18,14 @@ public class Principal {
             e.printStackTrace();
             System.exit(1);
         }
-        int[] layers = new int[]{ 25,20,15,categorias };
-        double tasaAprendizaje = 0.6;
+        int[] layers = new int[]{ 5, 6,categorias };
+        double tasaAprendizaje = 0.7;
         int iteraciones = 60000;
         
         MultiLayerPerceptron net = new MultiLayerPerceptron(layers, tasaAprendizaje);
         for (Layer capa: net.getCapas()){
             for(int i=0; i < capa.layerSize(); i++){
-                capa.getNeuron(i).setFuncionTransferencia(new Sigmoidal());
+                capa.getNeuron(i).setFuncionTransferencia(new Hyperbolic());
             }
         }
         ArrayList<Double> inputs = new ArrayList<>();
@@ -34,10 +34,10 @@ public class Principal {
         for(int i = 0; i < iteraciones && i < filas; i++){
             inputs.clear();
             for(int j = 0; j < columnas; j++)
-                inputs.add((double) arr[i][j]);
+                inputs.add((double) arr[i][j]/ 256.0);
             outputs.clear();
             for(int j = 0; j < categorias; j++)
-                outputs.add((arr[i][columnas] == j) ? 1.0 : 0.0 );
+                outputs.add((arr[i][columnas] == j) ? 1.0 : -1.0 );
             error = net.backPropagate(new Entrada(inputs,outputs));
             System.out.println("Error at step "+i+" is "+error);
         }
@@ -62,7 +62,8 @@ public class Principal {
         for(int i = 0; i < filas; i++){
             inputs.clear();
             for(int j = 0; j < columnas; j++)
-                inputs.add((double) arr[i][j]);
+                inputs.add((double) arr[i][j]/ 256.0);
+            outputs.clear();
             outputs = net.execute(new Entrada(inputs,null));
             
             prediccion = 0;

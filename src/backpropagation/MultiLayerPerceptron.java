@@ -85,6 +85,7 @@ public class MultiLayerPerceptron {
                     double varWeight = capas.get(k+1).getNeuron(i).getWeight(j);
                     capas.get(k+1).getNeuron(i).setWeight(j,varWeight + (tasaAprendizaje * capas.get(k+1).getNeuron(i).getDelta() * capas.get(k).getNeuron(j).getValue()));
                 }
+                capas.get(k+1).getNeuron(i).normalizeWeights();
                 double varThreshold = capas.get(k+1).getNeuron(i).getThreshold();
                 capas.get(k+1).getNeuron(i).setThreshold(varThreshold + (tasaAprendizaje * capas.get(k+1).getNeuron(i).getDelta()));
             }
@@ -200,7 +201,19 @@ class Neuron{
         if(inputs!=0) {for(int i=0;i<weights.length;i++){
             weights[i] = Math.random();
         }}
+        this.normalizeWeights();
         function = new Hyperbolic();
+    }
+    
+    
+    public void normalizeWeights() {
+        if (weights != null) {
+            double total = 0.0;
+            for (int i = 0; i < weights.length; i++)
+                total += weights[i];
+            for (int i = 0; i < weights.length; i++)
+                weights[i] = weights[i] / total;
+        }
     }
     
     public TransferFunction getFuncionTransferencia(){
